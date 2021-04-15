@@ -1,0 +1,29 @@
+    1  reboot
+    2  yum update
+    3  reboot
+    4  yum update
+    5  exit
+    6  fdisk /dev/sdb
+    7  lsblk
+    8  pvcreate /dev/sdb1
+    9  pvdisplay
+   10  vgdisplay
+   11  vgextend centos /dev/sdb1
+   12  lvdisplay
+   13  lvextend -l 100%FREE /dev/centos/root
+   14  resize2fs /dev/mapper/centos-root
+   15  ls /dev
+   16  ls /dev/mapper/
+   17  ls /dev/mapper/centos-root
+   18  clear
+   19  resize2fs --help
+   20  resize2fs /dev/mapper/centos-root
+   21  fdisk -l
+   22  pvdisplay
+   23  lvextend -l+100%FREE /dev/centos/root
+   24  resize2fs /dev/mapper/centos-root
+   25  df -h
+   26  vgdisplay -v
+   27  xfs_growfs /dev/centos/root
+   28  df -h
+   29  history > commands.txt
