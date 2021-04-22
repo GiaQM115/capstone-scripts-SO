@@ -2,7 +2,7 @@ import requests, json, ipaddress, datetime, traceback, socket, time, re
 
 types = ["syslog", "firewall", "ids", "osquery"] # , "ossec"]
 
-time_query = '{"query" : {"range": {"@timestamp": {"gte": "now-2m/m","lte": "now/m"}}}}'
+time_query = '{"query" : {"range": {"@timestamp": {"gte": "now-1m/m","lte": "now/m"}}}}'
 
 HOST = socket.gethostname()
 
@@ -183,8 +183,8 @@ def getIndices(url, type_):
 	return list(filter(None,events))
 
 sock = socket.socket()
-host = '192.168.1.4'
-port = 12345
+host = MISP_LOCATION
+port = MISP_PORT
 sock.connect((host, port))
 
 aborted = False
