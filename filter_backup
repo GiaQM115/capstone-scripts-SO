@@ -186,6 +186,7 @@ sock = socket.socket()
 host = MISP_LOCATION
 port = MISP_PORT
 sock.connect((host, port))
+sock.settimeout(10) # timeout if there's no response in 10 seconds
 
 aborted = False
 
