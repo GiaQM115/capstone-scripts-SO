@@ -12,9 +12,8 @@ cp $dir/filter_backup $dir/filter.py
 sed -i "s/MISP_LOCATION/'$ip'/;s/MISP_PORT/$port/" $dir/filter.py
 
 echo -n "Scheduling cronjob"
-
-crontab -l > cronlist > /dev/null
+crontab -l > cronlist 2>/dev/null
 echo "* * * * * python3 $dir/filter.py" >> cronlist
-crontab cronlist > /dev/null
+crontab cronlist 2>/dev/null
 rm cronlist
 printf "\n"

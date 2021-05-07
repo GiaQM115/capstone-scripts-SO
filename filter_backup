@@ -2,7 +2,7 @@ import requests, json, ipaddress, datetime, traceback, socket, time, re
 
 types = ["syslog", "firewall", "ids", "osquery"] # , "ossec"]
 
-time_query = '{"query" : {"range": {"@timestamp": {"gte": "now-1m/m","lte": "now/m"}}}}'
+time_query = '{"query" : {"range": {"@timestamp": {"gte": "now-1M/m","lte": "now/m"}}}}'
 
 HOST = socket.gethostname()
 
@@ -24,6 +24,7 @@ def parseSyslog(hit):
 	# find IPs/addresses
 	ips = []
 	date = []
+	domains = []
 	for element in msg:
 		try:
 			ipaddress.ip_address(element)
@@ -34,7 +35,10 @@ def parseSyslog(hit):
 				datetime.datetime.strptime(element, '%Y/%m/%d %H:%M:%S')
 				date.append(element)
 			except:
-				pass
+				reg = "^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}"
+				p = re.compile(reg)
+				if re.search(p, element):
+					domains.append(element)
 	for ip in ips:
 		diffFound = False
 		a = ipaddress.ip_network(ip, strict=False).network_address
@@ -49,6 +53,8 @@ def parseSyslog(hit):
 		data['ips'] = list(dict.fromkeys(ips))
 		data['eventTime'] = list(dict.fromkeys(date))
 		data['date'] = formatDate(hit['_source']['ingest']['timestamp'])
+		if len(domains) > 0:
+			data['domains'] = list(dict.fromkeys(domains))
 	else:
 		data = None
 	return data
