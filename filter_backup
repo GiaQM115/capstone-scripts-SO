@@ -2,9 +2,8 @@ import requests, json, ipaddress, datetime, traceback, socket, time, re
 
 types = ["syslog", "firewall", "ids", "osquery"] # , "ossec"]
 
-#time_query = '{"query" : {"range": {"@timestamp": {"gte": "now-1m/m","lte": "now/m"}}}}'
+time_query = '{"query" : {"range": {"@timestamp": {"gte": "now-1m/m","lte": "now/m"}}}}'
 
-time_query = '{"query" : {"bool": {"must": [{"wildcard": {"message": {"value": "*swamcorrecter.com*"}}}, {"range": {"@timestamp": {"gte": "now-12h/m","lt": "now"}}}]}}}'
 
 url_pattern = r"(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
 
