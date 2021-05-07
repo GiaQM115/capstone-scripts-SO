@@ -2,7 +2,11 @@ import requests, json, ipaddress, datetime, traceback, socket, time, re
 
 types = ["syslog", "firewall", "ids", "osquery"] # , "ossec"]
 
-time_query = '{"query" : {"range": {"@timestamp": {"gte": "now-1M/m","lte": "now/m"}}}}'
+#time_query = '{"query" : {"range": {"@timestamp": {"gte": "now-1m/m","lte": "now/m"}}}}'
+
+time_query = '{"query" : {"bool": {"must": [{"wildcard": {"message": {"value": "*swamcorrecter.com*"}}}, {"range": {"@timestamp": {"gte": "now-12h/m","lt": "now"}}}]}}}'
+
+url_pattern = r"(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
 
 HOST = socket.gethostname()
 
@@ -15,6 +19,7 @@ def formatDate(dt):
 	return date + " " + time
 
 def parseSyslog(hit):
+	global url_pattern
 	data = {}
 	diffFound = False
 	data['type'] = "SYSLOG"
@@ -35,9 +40,8 @@ def parseSyslog(hit):
 				datetime.datetime.strptime(element, '%Y/%m/%d %H:%M:%S')
 				date.append(element)
 			except:
-				reg = "^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}"
-				p = re.compile(reg)
-				if re.search(p, element):
+				element = element.strip('"')
+				if re.search(url_pattern, element) and re.match(r"[a-zA-Z\-\._\\/]", element):
 					domains.append(element)
 	for ip in ips:
 		diffFound = False
@@ -189,7 +193,7 @@ def getIndices(url, type_):
 	return list(filter(None,events))
 
 sock = socket.socket()
-host = MISP_LOCATION
+host = 'MISP_LOCATION'
 port = MISP_PORT
 sock.connect((host, port))
 sock.settimeout(10) # timeout if there's no response in 10 seconds

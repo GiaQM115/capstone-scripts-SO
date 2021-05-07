@@ -9,7 +9,7 @@ echo -n "Server port: "
 read port
 
 cp $dir/filter_backup $dir/filter.py
-sed -i "s/MISP_LOCATION/'$ip'/;s/MISP_PORT/$port/" $dir/filter.py
+sed -i "s/MISP_LOCATION/$ip/;s/MISP_PORT/$port/" $dir/filter.py
 
 echo -n "Scheduling cronjob"
 crontab -l > cronlist 2>/dev/null
